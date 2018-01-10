@@ -1,0 +1,45 @@
+version: "3"
+services:
+
+  visualizer:
+    image: dockersamples/visualizer:stable
+    ports:
+      - "8080:8080"
+    stop_grace_period: 1m30s
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock"
+    deploy:
+      placement:
+        constraints: [node.role == manager]
+		
+edis:
+    image: redis
+    networks:
+      - backend
+  master:
+    image: dyomisasha96/master
+    ports:
+      - "5000:5000"
+    deploy:
+      replicas: 1
+      placement:
+        constraints: [node.role == manager]
+      restart_policy:
+        condition: on-failure
+    networks:
+      - backend
+  worker:
+    image: dyomisasha96/worker
+    networks:
+      - backend
+    deploy:
+      replicas: 2
+      restart_policy:
+        condition: on-failure
+        delay: 10s
+networks:
+  backend:
+
+volumes:
+  db-data:
+
