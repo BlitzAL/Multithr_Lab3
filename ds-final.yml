@@ -1,6 +1,5 @@
 version: "3"
 services:
-
   visualizer:
     image: dockersamples/visualizer:stable
     ports:
@@ -11,13 +10,12 @@ services:
     deploy:
       placement:
         constraints: [node.role == manager]
-		
-edis:
+redis:
     image: redis
     networks:
       - backend
   master:
-    image: dyomisasha96/master
+    image: blitzal/master
     ports:
       - "5000:5000"
     deploy:
@@ -29,7 +27,7 @@ edis:
     networks:
       - backend
   worker:
-    image: dyomisasha96/worker
+    image: blitzal/worker
     networks:
       - backend
     deploy:
@@ -37,9 +35,11 @@ edis:
       restart_policy:
         condition: on-failure
         delay: 10s
+		
 networks:
   backend:
 
 volumes:
   db-data:
+
 
