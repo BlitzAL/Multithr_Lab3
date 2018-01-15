@@ -10,10 +10,12 @@ services:
     deploy:
       placement:
         constraints: [node.role == manager]
-redis:
+  redis:
     image: redis
     networks:
       - backend
+    volumes:
+      - "data:/data"
   master:
     image: blitzal/master
     ports:
@@ -35,11 +37,7 @@ redis:
       restart_policy:
         condition: on-failure
         delay: 10s
-		
 networks:
   backend:
-
 volumes:
-  db-data:
-
-
+  db-data: 
